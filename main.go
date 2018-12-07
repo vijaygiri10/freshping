@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"freshping/monitor"
 	"freshping/route"
 	"net/http"
 	"os"
@@ -21,7 +22,12 @@ func main() {
 		fmt.Printf("\t\n Stoping Backed Server \n\t Caught Signal : %s", Signal.String())
 	}()
 
-	route := route.GetGorilaMuxRouter()
+	go monitor.StartURLParser()
+	r
+	oute := route.GetGorilaMuxRouter()
+	// This will serve files under http://IP:PORT/assets/<filename>
+	route.PathPrefix("/").Handler(http.FileServer(http.Dir(".")))
+
 	http.Handle("/", route)
-	http.ListenAndServe(addr, nil)
+	fmt.Println(http.ListenAndServe(addr, nil))
 }

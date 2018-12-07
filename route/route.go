@@ -15,29 +15,44 @@ type route struct {
 	Name            string
 	Method          string
 	Path            string
-	HttpHandlerfunc http.HandlerFunc
+	HTTPHandlerfunc http.HandlerFunc
 }
 
 var pingroutes = []route{
 	route{
 		Name:            "index",
 		Method:          "GET",
-		Path:            "/index",
-		HttpHandlerfunc: template.Index,
+		Path:            "/",
+		HTTPHandlerfunc: template.Index,
 	},
 	route{
 		Name:            "login",
 		Method:          "GET,POST",
 		Path:            "/login",
-		HttpHandlerfunc: template.Login,
+		HTTPHandlerfunc: template.Login,
+	},
+	route{
+		Name:            "signup",
+		Method:          "GET,POST",
+		Path:            "/signup",
+		HTTPHandlerfunc: template.SignUp,
+	},
+	route{
+		Name:            "panic",
+		Method:          "GET",
+		Path:            "/panic",
+		HTTPHandlerfunc: template.Panic,
 	},
 }
 
-//GetGorilaMuxRouter
+//GetGorilaMuxRouter  fsjfacjs
 func GetGorilaMuxRouter() *mux.Router {
-	muxroute := mux.NewRouter().StrictSlash(true)
+	muxroute := mux.NewRouter()
 	for _, route := range pingroutes {
-		muxroute.Methods(route.Method).Path(route.Path).Handler(middleware.Logger(route.HttpHandlerfunc, route.Name)).Name(route.Name)
+		//var handle http.Handler
+		//handle = route.HTTPHandlerfunc
+		muxroute.Methods(route.Method).Path(route.Path).Handler(middleware.Logger(route.HTTPHandlerfunc, route.Name)).Name(route.Name)
+		//muxroute.Methods(route.Method).Path(route.Path).HandlerFunc(middleware.Logger(route.HTTPHandlerfunc, route.Name))
 		//MuxRouter.Methods(route.MethodType).Path(route.URLPattern).Name(route.FuncName).Handler(logger.Logger(handler, route.FuncName))
 	}
 	fmt.Println("Muxroute : ", muxroute)

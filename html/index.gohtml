@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,19 +7,17 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>{{.Title}}</title>
+    <link rel="stylesheet" href="assets/main.css">
 </head>
 <body>
 
-<header>
-    <div>Fresh Ping Logo</div>
-    <div>
-        <a href="/">home</a><br>
-        <a href="/about">about</a><br>
-        <a href="/ping">ping</a><br>
-        <a href="/signup">signup</a><br>
-		<a href="/login">login</a><br>
-    </div>
-</header>
+
+
+{{template "header"}}
+
+<main>
+    <h1>{{.Title}}</h1>
+</main>
 
 </body>
 </html>
