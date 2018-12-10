@@ -1,0 +1,54 @@
+{
+    "freshping": [
+      {
+        "client_id": "vijay",
+        "url_data": [
+          {
+            "url": "www.google.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.yahoo.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.maropost.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.outlook.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.opsramp.com",
+            "frequency": 1
+          }
+        ]
+      },
+      {
+        "client_id": "kumar",
+        "url_data": [
+          {
+            "url": "www.google.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.yahoo.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.maropost.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.outlook.com",
+            "frequency": 1
+          },
+          {
+            "url": "www.opsramp.com",
+            "frequency": 1
+          }
+        ]
+      }
+    ]
+  }

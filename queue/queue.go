@@ -9,7 +9,7 @@ var Queue *queue
 
 func init() {
 	Queue = &queue{}
-	Queue.list = list.New().Init()
+	Queue.List = list.New().Init()
 }
 
 type queue struct {
