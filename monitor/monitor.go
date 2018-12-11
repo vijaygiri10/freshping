@@ -18,6 +18,7 @@ var (
 
 	FreshPing        freshping
 	httpResponceChan chan *HTTPResponse
+	pushDataFlag     bool
 )
 
 // HTTPResponse defines the results from a http request
@@ -85,8 +86,10 @@ func QueueStatus() {
 		time.Sleep(100 * time.Millisecond)
 		select {
 		case <-ch:
-			if queue.Queue.Len() > 0 {
+			if queue.Queue.Len() > 0 && !pushDataFlag {
 				purgingQueueChannel <- true
+			} else {
+				fmt.Println("QueueStatus else case  len:", queue.Queue.Len(), " : pushDataFlag: ", pushDataFlag)
 			}
 		}
 	}
@@ -99,30 +102,33 @@ func getURLHttpResponce(url string, ClientID string) {
 		}
 	}()
 	//fmt.Printf("Fetching %s \n", url)
-	trans := &http.Transport{ResponseHeaderTimeout: time.Duration(5 * time.Second), DisableKeepAlives: true}
+	trans := &http.Transport{ResponseHeaderTimeout: time.Duration(10 * time.Second), DisableKeepAlives: true}
 	client := &http.Client{
 		Transport: trans,
-		Timeout:   time.Duration(5 * time.Second),
+		Timeout:   time.Duration(10 * time.Second),
 	}
 
 	resp, err := client.Get("http://" + url)
 	//defer resp.Body.Close()
-	fmt.Println(url, "    resp : ", resp, " : err : ", err)
+
 	httpstatus := 0
 	if resp != nil {
 		httpstatus = resp.StatusCode
 	}
-	queue.Queue.Enqueue(&HTTPResponse{ClientID: ClientID, URL: url, Error: err, Response: httpstatus, TimeStamp: time.Now().UnixNano()})
+	data := &HTTPResponse{ClientID: ClientID, URL: url, Error: err, Response: httpstatus, TimeStamp: time.Now().UnixNano()}
+	fmt.Println(url, "    data : ", data)
+	queue.Queue.Enqueue(data)
 
 }
 
 func pushDataElasticSearch() {
 	defer func() {
+		pushDataFlag = false
 		if err := recover(); err != nil {
 			fmt.Println("recover pushDataElasticSearch: ", util.RecoverExceptionDetails(util.FuncName()), "   ", err)
 		}
 	}()
-
+	pushDataFlag = true
 	for queue.Queue.Len() > 0 {
 		data := queue.Queue.Dequeue()
 		value := data.(*HTTPResponse)
@@ -136,7 +142,7 @@ func pushDataElasticSearch() {
 		fmt.Println(strtime, "  | output : ", string(output[:]))
 		elasticsearch.InsertDataToElastic(value.ClientID, string(output[:]))
 	}
-	//purgingQueueChannel <- false
+
 }
 
 func sendDatatoElasticSearch() {
@@ -154,7 +160,6 @@ func sendDatatoElasticSearch() {
 				go getURLHttpResponce(urldata.URL, urldata.ClientID)
 			case <-purgingQueueChannel:
 				go pushDataElasticSearch()
-				purgingQueueChannel <- false
 			}
 			time.Sleep(1 * time.Nanosecond)
 		}
