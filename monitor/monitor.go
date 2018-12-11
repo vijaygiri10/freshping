@@ -62,7 +62,7 @@ func StartURLParser() {
 	}
 
 	if err := json.NewDecoder(strings.NewReader(string(jsonConf[:]))).Decode(&FreshPing); err != nil {
-
+		fmt.Println("Error json decording : ", err)
 	}
 
 	for _, urlmonitor := range FreshPing.URLMonitor {
@@ -101,7 +101,7 @@ func getURLHttpResponce(url string, ClientID string) {
 			fmt.Println("recover getURLHttpResponce: ", util.RecoverExceptionDetails(util.FuncName()), "  : ", err)
 		}
 	}()
-	//fmt.Printf("Fetching %s \n", url)
+
 	trans := &http.Transport{ResponseHeaderTimeout: time.Duration(10 * time.Second), DisableKeepAlives: true}
 	client := &http.Client{
 		Transport: trans,
@@ -133,7 +133,6 @@ func pushDataElasticSearch() {
 		data := queue.Queue.Dequeue()
 		value := data.(*HTTPResponse)
 
-		//fmt.Println("value : ", value)
 		output, err := json.Marshal(data)
 		if err != nil {
 			fmt.Println("error json.Marshal : ", err)
