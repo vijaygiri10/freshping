@@ -55,6 +55,11 @@ var Data string = `
 `
 
 func InsertDataToElastic(Index, data string) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("recover InsertDataToElastic")
+		}
+	}()
 	// Use the IndexExists service to check if a specified index exists.
 	if exists, _ := client.IndexExists(Index).Do(context.Background()); !exists {
 		// Create a new index.

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"freshping/elasticsearch"
 	"freshping/queue"
+	"freshping/util"
 	"io/ioutil"
 	"net/http"
-	"reflect"
 	"strings"
 	"time"
 )
@@ -22,9 +22,10 @@ var (
 
 // HTTPResponse defines the results from a http request
 type HTTPResponse struct {
-	ClientID  string
-	URL       string
-	Response  *http.Response
+	ClientID string
+	URL      string
+	//Response  *http.Response
+	Response  int
 	Error     error
 	TimeStamp int64
 }
@@ -74,10 +75,29 @@ func StartURLParser() {
 	}
 
 	go sendDatatoElasticSearch()
+	go QueueStatus()
+}
+
+func QueueStatus() {
+	ch := time.Tick(time.Duration(30) * time.Second)
+
+	for {
+		time.Sleep(100 * time.Millisecond)
+		select {
+		case <-ch:
+			if queue.Queue.Len() > 0 {
+				purgingQueueChannel <- true
+			}
+		}
+	}
 }
 
 func getURLHttpResponce(url string, ClientID string) {
-
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("recover getURLHttpResponce: ", util.RecoverExceptionDetails(util.FuncName()), "  : ", err)
+		}
+	}()
 	//fmt.Printf("Fetching %s \n", url)
 	trans := &http.Transport{ResponseHeaderTimeout: time.Duration(5 * time.Second), DisableKeepAlives: true}
 	client := &http.Client{
@@ -87,38 +107,57 @@ func getURLHttpResponce(url string, ClientID string) {
 
 	resp, err := client.Get("http://" + url)
 	//defer resp.Body.Close()
-	fmt.Println(url, "    resp : ", resp.Status, " : err : ", err)
-	queue.Queue.Enqueue(&HTTPResponse{ClientID: ClientID, URL: url, Response: resp, Error: err, TimeStamp: time.Now().UnixNano()})
-	purgingQueueChannel <- true
+	fmt.Println(url, "    resp : ", resp, " : err : ", err)
+	httpstatus := 0
+	if resp != nil {
+		httpstatus = resp.StatusCode
+	}
+	queue.Queue.Enqueue(&HTTPResponse{ClientID: ClientID, URL: url, Error: err, Response: httpstatus, TimeStamp: time.Now().UnixNano()})
+
 }
 
-func pushDataElasticSearch(data interface{}) {
-	value := data.(*HTTPResponse)
-	fmt.Println("value : ", value)
-	output, err := json.Marshal(*value)
-	if err != nil {
-		fmt.Println("error json.Marshal : ", err)
+func pushDataElasticSearch() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("recover pushDataElasticSearch: ", util.RecoverExceptionDetails(util.FuncName()), "   ", err)
+		}
+	}()
+
+	for queue.Queue.Len() > 0 {
+		data := queue.Queue.Dequeue()
+		value := data.(*HTTPResponse)
+
+		//fmt.Println("value : ", value)
+		output, err := json.Marshal(data)
+		if err != nil {
+			fmt.Println("error json.Marshal : ", err)
+		}
+		strtime := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		fmt.Println(strtime, "  | output : ", string(output[:]))
+		elasticsearch.InsertDataToElastic(value.ClientID, string(output[:]))
 	}
-	fmt.Println("Type : ", reflect.TypeOf(data))
-	elasticsearch.InsertDataToElastic(value.ClientID, string(output[:]))
+	//purgingQueueChannel <- false
 }
 
 func sendDatatoElasticSearch() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("recover sendDatatoElasticSearch: ", util.RecoverExceptionDetails(util.FuncName()), "    ", err)
+		}
+	}()
 	fmt.Println("ApplicationMonitor : ", ApplicationMonitor)
+
 	for {
 		for _, urldata := range ApplicationMonitor {
 			select {
 			case <-urldata.Appmons:
 				go getURLHttpResponce(urldata.URL, urldata.ClientID)
 			case <-purgingQueueChannel:
-				for queue.Queue.Len() > 0 {
-					go pushDataElasticSearch(queue.Queue.Dequeue())
-				}
-
-			default:
+				go pushDataElasticSearch()
+				purgingQueueChannel <- false
 			}
+			time.Sleep(1 * time.Nanosecond)
 		}
 		time.Sleep(1 * time.Nanosecond)
 	}
-
 }
