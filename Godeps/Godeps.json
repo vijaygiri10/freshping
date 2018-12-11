@@ -1,0 +1,48 @@
+{
+	"ImportPath": "freshping",
+	"GoVersion": "go1.11",
+	"GodepVersion": "v80",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.6.2-12-g3d80bc8",
+			"Rev": "3d80bc801bb034e17cae38591335b3b1110f1c47"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson",
+			"Rev": "60711f1a8329503b04e1c88535f419d0bb440bff"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/buffer",
+			"Rev": "60711f1a8329503b04e1c88535f419d0bb440bff"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/jlexer",
+			"Rev": "60711f1a8329503b04e1c88535f419d0bb440bff"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/jwriter",
+			"Rev": "60711f1a8329503b04e1c88535f419d0bb440bff"
+		},
+		{
+			"ImportPath": "github.com/olivere/elastic",
+			"Comment": "v6.2.14",
+			"Rev": "1619150b007041b6dba8aa447f0e2d151cc2b4c5"
+		},
+		{
+			"ImportPath": "github.com/olivere/elastic/config",
+			"Comment": "v6.2.14",
+			"Rev": "1619150b007041b6dba8aa447f0e2d151cc2b4c5"
+		},
+		{
+			"ImportPath": "github.com/olivere/elastic/uritemplates",
+			"Comment": "v6.2.14",
+			"Rev": "1619150b007041b6dba8aa447f0e2d151cc2b4c5"
+		},
+		{
+			"ImportPath": "github.com/pkg/errors",
+			"Comment": "v0.8.0-17-g059132a",
+			"Rev": "059132a15dd08d6704c67711dae0cf35ab991756"
+		}
+	]
+}
