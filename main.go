@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"freshping/monitor"
 	"freshping/route"
@@ -30,7 +29,7 @@ func main() {
 		signal.Notify(gressfullstop, syscall.SIGQUIT, syscall.SIGKILL, syscall.SIGABRT)
 		fmt.Printf("\t\n Stoping Backed Server \n\t Caught Signal : %s", Signal.String())
 	}()
-	context.Background()
+	//context.Background()
 	go monitor.StartURLParser()
 
 	route := route.GetGorilaMuxRouter()
