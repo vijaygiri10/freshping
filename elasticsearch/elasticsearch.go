@@ -63,15 +63,20 @@ func InsertDataToElastic(Index, data string) {
 	// Use the IndexExists service to check if a specified index exists.
 	if exists, _ := client.IndexExists(Index).Do(context.Background()); !exists {
 		// Create a new index.
-		createIndex, err := client.CreateIndex(Index).BodyString(data).Do(context.Background())
-		if err != nil {
+		if client, err := client.CreateIndex(Index).BodyJson(data).Do(context.Background()); err != nil {
 			// Handle error
-			fmt.Println("Error CreateIndex")
+			fmt.Println("Error CreateIndex: ", err)
+			_ = client.Acknowledged
 		}
-		_ = createIndex.Acknowledged
 	} else {
 		if _, err := client.Index().Index(Index).Type("doc").BodyJson(data).Do(context.Background()); err != nil {
-			fmt.Println("Error client.Index ")
+			fmt.Println("Error client.Index : ", err)
 		}
 	}
 }
+
+/*
+
+elastic: Error 400 (Bad Request): unknown setting [index.ClientID]
+please check that any required plugins are installed, or check the breaking changes documentation for removed settings [type=illegal_argument_exception]
+*/

@@ -65,6 +65,8 @@ func StartURLParser() {
 		fmt.Println("Error json decording : ", err)
 	}
 
+	fmt.Println("total No of URL : ", len(FreshPing.URLMonitor))
+
 	for _, urlmonitor := range FreshPing.URLMonitor {
 		for _, url := range urlmonitor.URLData {
 			var appMonit app_Monitor

@@ -29,7 +29,57 @@
       "client_id": "kumar",
       "url_data": [
         {
-          "url": "www.google.com",
+          "url": "www.youtube.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.facebook.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.baidu.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.wikipedia.org",
+          "frequency": 1
+        },
+        {
+          "url": "www.qq.com",
+          "frequency": 1
+        }
+      ]
+    },
+    {
+      "client_id": "giri",
+      "url_data": [
+        {
+          "url": "www.amazon.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.taobao.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.tmall.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.twitter.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.sohu.com",
+          "frequency": 1
+        }
+      ]
+    },
+    {
+      "client_id": "advit",
+      "url_data": [
+        {
+          "url": "www.live.com",
           "frequency": 1
         },
         {
@@ -46,6 +96,81 @@
         },
         {
           "url": "www.opsramp.com",
+          "frequency": 1
+        }
+      ]
+    },
+    {
+      "client_id": "preeti",
+      "url_data": [
+        {
+          "url": "www.jd.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.weibo.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.Instagram.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.sina.com.cn",
+          "frequency": 1
+        },
+        {
+          "url": "www.vk.com",
+          "frequency": 1
+        }
+      ]
+    },
+    {
+      "client_id": "preetiadviit",
+      "url_data": [
+        {
+          "url": "www.reddit.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.360.cn",
+          "frequency": 1
+        },
+        {
+          "url": "www.yandex.ru",
+          "frequency": 1
+        },
+        {
+          "url": "www.blogspot.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.netflix.com",
+          "frequency": 1
+        }
+      ]
+    },
+    {
+      "client_id": "advitpreeti",
+      "url_data": [
+        {
+          "url": "www.inkedin.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.twitch.tv",
+          "frequency": 1
+        },
+        {
+          "url": "www.maropost.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.aliexpress.com",
+          "frequency": 1
+        },
+        {
+          "url": "www.pages.tmall.com",
           "frequency": 1
         }
       ]
