@@ -66,6 +66,9 @@ func (c *Controller) Login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println()
 	fmt.Println("body : ", StreamToBuffer(req.Body).String())
 	var user userDetails
+	type userDetails struct {
+		firstName, lastName, email, password string
+	}
 	if err := json.Unmarshal(StreamToBuffer(req.Body).Bytes(), &register.UserD); err != nil {
 		fmt.Fprintf(w, err.Error())
 	}
