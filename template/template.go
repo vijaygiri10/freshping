@@ -48,6 +48,29 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err.Error())
 		}
 	}
+
+}
+func StreamToBuffer(stream io.Reader) *bytes.Buffer {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(stream)
+	return buf
+}
+
+func (c *Controller) Login(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(w, " ---- Login ---- ")
+	fmt.Println("Method : ", req.Method)
+	fmt.Println("Form : ", req.Form)
+	fmt.Println("URL : ", req.URL)
+	fmt.Println("Header : ", req.Header)
+	fmt.Println("body : ", mux.Vars(req.Form))
+	fmt.Println()
+	fmt.Println("body : ", StreamToBuffer(req.Body).String())
+	var user userDetails
+	if err := json.Unmarshal(StreamToBuffer(req.Body).Bytes(), &register.UserD); err != nil {
+		fmt.Fprintf(w, err.Error())
+	}
+	userD
+
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
